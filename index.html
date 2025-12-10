@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Protocolo 90K - Rei Anderson</title>
+    <title>Protocolo 90K - V3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
@@ -13,13 +13,13 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        'prot-black': '#121212',
-                        'prot-dark': '#1E1E1E',
-                        'prot-gray': '#2D2D2D',
-                        'prot-orange': '#FF6B00',
-                        'prot-orange-dark': '#CC5500',
-                        'prot-red': '#EF4444',
-                        'prot-green': '#10B981',
+                        'prot-bg': '#0f0f10',
+                        'prot-card': '#18181b',
+                        'prot-border': '#27272a',
+                        'prot-orange': '#f97316',
+                        'prot-orange-dim': '#c2410c',
+                        'prot-green': '#22c55e',
+                        'prot-red': '#ef4444',
                     }
                 }
             }
@@ -27,26 +27,26 @@
     </script>
 
     <style>
-        body { background-color: #121212; color: #E5E5E5; -webkit-tap-highlight-color: transparent; }
-        .card { background-color: #1E1E1E; border: 1px solid #2D2D2D; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
+        body { background-color: #0f0f10; color: #e4e4e7; -webkit-tap-highlight-color: transparent; }
+        .card { background-color: #18181b; border: 1px solid #27272a; border-radius: 16px; box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.5); }
         input, button { outline: none; }
         
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #1E1E1E; }
-        ::-webkit-scrollbar-thumb { background: #2D2D2D; border-radius: 2px; }
+        ::-webkit-scrollbar-track { background: #18181b; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 2px; }
         
         /* Animations */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         
-        @keyframes pulse-red { 0% { background-color: rgba(239, 68, 68, 0.1); } 50% { background-color: rgba(239, 68, 68, 0.3); } 100% { background-color: rgba(239, 68, 68, 0.1); } }
-        .animate-alert { animation: pulse-red 2s infinite; }
+        @keyframes pulse-border { 0% { border-color: #27272a; } 50% { border-color: #f97316; } 100% { border-color: #27272a; } }
+        .focus-pulse:focus-within { animation: pulse-border 2s infinite; }
 
         /* Graph Utilities */
-        .chart-line { fill: none; stroke: #FF6B00; stroke-width: 2; vector-effect: non-scaling-stroke; }
-        .chart-dot { fill: #1E1E1E; stroke: #FF6B00; stroke-width: 2; r: 4; }
-        .chart-area { fill: rgba(255, 107, 0, 0.1); }
+        .chart-line { fill: none; stroke: #f97316; stroke-width: 3; vector-effect: non-scaling-stroke; stroke-linecap: round; }
+        .chart-dot { fill: #18181b; stroke: #f97316; stroke-width: 2; r: 4; }
+        .chart-area { fill: rgba(249, 115, 22, 0.1); }
     </style>
 <script type="importmap">
 {
@@ -60,34 +60,31 @@
 }
 </script>
 </head>
-<body class="pb-12 select-none">
+<body class="pb-20 select-none">
 
-    <!-- TOAST DE GAMIFICAÇÃO -->
-    <div id="toast" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 hidden opacity-0 transition-opacity duration-300">
-        <div class="text-center transform scale-100">
-            <div class="text-6xl mb-4">🏆</div>
-            <h2 class="text-3xl font-black text-white italic uppercase">Boa, Rei!</h2>
-            <p class="text-prot-green font-semibold mt-2 text-lg">Meta Batida.</p>
-        </div>
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 bg-prot-green text-black font-bold px-6 py-3 rounded-full shadow-xl shadow-green-900/20 translate-y-[-150%] transition-transform duration-300 flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        <span id="toast-msg">Sucesso!</span>
     </div>
 
     <!-- HEADER -->
-    <header className="sticky top-0 z-20 bg-prot-dark/95 backdrop-blur border-b border-prot-gray shadow-xl">
-        <div class="max-w-md mx-auto px-4 py-4 flex justify-between items-center">
+    <header class="sticky top-0 z-40 bg-prot-bg/80 backdrop-blur-md border-b border-prot-border">
+        <div class="max-w-md mx-auto px-5 py-4 flex justify-between items-center">
             <div>
-                <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-0.5">Protocolo 90K</p>
-                <h1 class="text-xl font-black italic text-white leading-tight">
-                    Rei <span class="text-prot-orange">Anderson</span>
+                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-0.5">Protocolo 90K</p>
+                <h1 class="text-xl font-black italic text-white tracking-tight">
+                    REI <span class="text-prot-orange">ANDERSON</span>
                 </h1>
             </div>
             <div class="text-right">
-                <div class="flex gap-3 text-[10px] font-mono text-gray-400 mb-1">
-                    <span>META: 90kg</span>
-                    <span>TETO: 1750kcal</span>
+                <div class="flex items-center justify-end gap-2 mb-1">
+                    <span id="header-weight" class="text-xl font-bold text-white">--</span>
+                    <span class="text-xs text-gray-500">kg atual</span>
                 </div>
-                <div class="flex items-baseline justify-end gap-2">
-                    <span id="header-weight" class="text-xl font-bold text-white">--kg</span>
-                    <span id="header-cals" class="text-xs px-2 py-0.5 rounded bg-gray-800 text-gray-400 font-mono">-- kcal</span>
+                <div class="flex gap-2 text-[10px] font-mono text-gray-400">
+                    <span class="bg-white/5 px-1.5 py-0.5 rounded">META: 90kg</span>
+                    <span class="bg-white/5 px-1.5 py-0.5 rounded">TETO: 1750kcal</span>
                 </div>
             </div>
         </div>
@@ -95,187 +92,204 @@
 
     <main class="max-w-md mx-auto px-4 pt-6 space-y-6">
 
-        <!-- 1. NUTRIÇÃO -->
-        <section class="card p-5 animate-fade-in">
-            <div class="mb-4">
-                <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2 mb-3">
-                    <!-- Icon Utensils -->
-                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                    Gestão de Combustível
+        <!-- 1. NUTRIÇÃO & BUSCA -->
+        <section class="card p-5 animate-fade-in relative overflow-visible z-30">
+            <div class="flex justify-between items-end mb-3">
+                <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                    <svg class="w-4 h-4 text-prot-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Controle Calórico
                 </h3>
+                <div class="text-right">
+                    <span id="nutri-val" class="text-2xl font-bold text-white">0</span>
+                    <span class="text-xs text-gray-500">/ 1750</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="h-2 w-full bg-gray-800 rounded-full overflow-hidden mb-6">
+                <div id="nutri-bar" class="h-full bg-prot-orange transition-all duration-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]" style="width: 0%"></div>
+            </div>
+
+            <!-- SEARCH INPUT -->
+            <div class="relative group focus-pulse rounded-xl bg-black/40 border border-prot-border transition-colors hover:border-gray-600 mb-4">
+                <div class="flex items-center px-4 py-3">
+                    <svg class="w-5 h-5 text-gray-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input id="food-search" type="text" placeholder="Buscar alimento (ex: Arroz...)" 
+                           class="w-full bg-transparent text-sm text-white placeholder-gray-600 focus:outline-none"
+                           autocomplete="off">
+                </div>
                 
-                <div class="flex justify-between items-end mb-2">
-                    <div>
-                        <span id="nutri-current" class="text-3xl font-bold text-white">0</span>
-                        <span class="text-gray-500 text-sm"> / 1750 kcal</span>
-                    </div>
-                    <div id="nutri-status" class="text-xs font-mono text-gray-400">Restam: --</div>
-                </div>
-
-                <div class="h-3 w-full bg-prot-gray rounded-full overflow-hidden">
-                    <div id="nutri-bar" class="h-full bg-blue-500 transition-all duration-500" style="width: 0%"></div>
+                <!-- DROPDOWN RESULTS -->
+                <div id="search-results" class="hidden absolute top-full left-0 right-0 mt-2 bg-[#1c1c1f] border border-prot-border rounded-xl shadow-2xl overflow-hidden max-h-60 overflow-y-auto z-50">
+                    <!-- Results injected here -->
                 </div>
             </div>
 
-            <!-- Cardápio Tático -->
-            <div class="grid gap-2 mb-4" id="meal-list">
-                <!-- Injetado via JS -->
-            </div>
-
-            <!-- Input Manual -->
-            <div class="bg-black/20 p-3 rounded-lg border border-prot-gray flex gap-2">
-                <input id="extra-desc" type="text" placeholder="Extra (ex: Chocolate)" class="flex-1 bg-prot-gray text-white text-sm rounded px-3 py-2 border border-transparent focus:border-prot-orange">
-                <input id="extra-cals" type="number" placeholder="Kcal" class="w-20 bg-prot-gray text-white text-sm rounded px-3 py-2 border border-transparent focus:border-prot-orange">
-                <button onclick="addExtra()" class="bg-gray-700 hover:bg-prot-orange text-white px-3 rounded transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
-                </button>
-            </div>
-            
-            <!-- Histórico Recente -->
-            <div id="nutri-history" class="mt-3 pt-3 border-t border-prot-gray space-y-1 hidden">
-                <p class="text-[10px] text-gray-500 uppercase font-bold mb-2">Hoje</p>
-                <!-- Items -->
+            <!-- History Summary -->
+            <div id="meal-history" class="space-y-2 mt-4 max-h-40 overflow-y-auto pr-1">
+                <!-- History Items injected here -->
+                <div class="text-center text-xs text-gray-600 py-2 italic">Nenhum registro hoje.</div>
             </div>
         </section>
 
-        <!-- 2. HIDRATAÇÃO -->
+        <!-- 2. FITNESS MODULE -->
         <section class="card p-5 animate-fade-in" style="animation-delay: 0.1s">
-            <div class="flex justify-between items-end mb-4">
-                <div>
-                    <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
-                        <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
-                        Hidratação
-                    </h3>
-                    <p class="text-3xl font-bold text-white mt-1">
-                        <span id="water-current">0.0</span> <span class="text-lg text-gray-500">/ 4L</span>
-                    </p>
-                </div>
-                <div id="water-pct" class="text-prot-orange font-bold text-xl">0%</div>
+            <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2 mb-4">
+                <svg class="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                Atividade Física (Bônus)
+            </h3>
+
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="addExercise('bike')" id="btn-bike" class="flex items-center justify-between p-4 bg-gray-800/50 hover:bg-gray-800 border border-transparent hover:border-prot-orange/50 rounded-xl transition-all group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🚴‍♂️</span>
+                        <div class="text-left">
+                            <div class="font-bold text-gray-200">Bicicleta</div>
+                            <div class="text-[10px] text-gray-500">Cardio Moderado • 30 min</div>
+                        </div>
+                    </div>
+                    <div class="w-6 h-6 rounded-full border-2 border-gray-600 group-hover:border-prot-orange flex items-center justify-center exercise-check" data-type="bike"></div>
+                </button>
+
+                <button onclick="addExercise('rope')" id="btn-rope" class="flex items-center justify-between p-4 bg-gray-800/50 hover:bg-gray-800 border border-transparent hover:border-prot-orange/50 rounded-xl transition-all group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🔥</span>
+                        <div class="text-left">
+                            <div class="font-bold text-gray-200">Pular Corda</div>
+                            <div class="text-[10px] text-gray-500">HIIT Intenso • 10 min</div>
+                        </div>
+                    </div>
+                    <div class="w-6 h-6 rounded-full border-2 border-gray-600 group-hover:border-prot-orange flex items-center justify-center exercise-check" data-type="rope"></div>
+                </button>
+
+                <button onclick="addExercise('gym')" id="btn-gym" class="flex items-center justify-between p-4 bg-gray-800/50 hover:bg-gray-800 border border-transparent hover:border-prot-orange/50 rounded-xl transition-all group">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">💪</span>
+                        <div class="text-left">
+                            <div class="font-bold text-gray-200">Musculação</div>
+                            <div class="text-[10px] text-gray-500">Força / Hipertrofia</div>
+                        </div>
+                    </div>
+                    <div class="w-6 h-6 rounded-full border-2 border-gray-600 group-hover:border-prot-orange flex items-center justify-center exercise-check" data-type="gym"></div>
+                </button>
+            </div>
+        </section>
+
+        <!-- 3. HIDRATAÇÃO -->
+        <section class="card p-5 animate-fade-in" style="animation-delay: 0.15s">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                    Meta de Água (4L)
+                </h3>
+                <span id="water-val" class="text-blue-400 font-bold font-mono">0%</span>
             </div>
 
-            <div class="h-3 w-full bg-prot-gray rounded-full overflow-hidden mb-6">
-                <div id="water-bar" class="h-full bg-blue-500 transition-all duration-500 relative" style="width: 0%">
+            <div class="h-3 w-full bg-gray-800 rounded-full overflow-hidden mb-5">
+                <div id="water-bar" class="h-full bg-blue-600 transition-all duration-500 relative" style="width: 0%">
                     <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-                <button onclick="addWater(250)" class="bg-prot-gray hover:bg-gray-700 active:bg-gray-600 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
-                    + 250ml
-                </button>
-                <button onclick="addWater(500)" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20">
-                    + 500ml
-                </button>
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="addWater(250)" class="bg-gray-800 hover:bg-gray-700 text-gray-300 py-3 rounded-lg text-xs font-bold transition-colors">+250ml</button>
+                <button onclick="addWater(500)" class="bg-blue-900/30 hover:bg-blue-900/50 text-blue-200 border border-blue-900/50 py-3 rounded-lg text-xs font-bold transition-colors">+500ml</button>
+                <button onclick="addWater(1000)" class="bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-lg text-xs font-bold transition-colors shadow-lg shadow-blue-900/40">+1L</button>
             </div>
         </section>
 
-        <!-- 3. MEDICAMENTOS -->
+        <!-- 4. MANIPULADOS (4 PHASES) -->
         <section class="card p-5 animate-fade-in" style="animation-delay: 0.2s">
-            <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider flex items-center gap-2 mb-5">
+            <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-4 flex items-center gap-2">
                 <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
-                Protocolo Manipulados
+                Manipulados
             </h3>
-            <div id="med-list" class="space-y-6">
-                <!-- Injetado via JS -->
+            <div id="meds-container" class="space-y-4">
+                <!-- Med Groups Injected Here -->
             </div>
         </section>
 
-        <!-- 4. PESO -->
-        <section class="card p-5 animate-fade-in" style="animation-delay: 0.3s">
-            <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-4">Evolução Peso</h3>
+        <!-- 5. PESO -->
+        <section class="card p-5 animate-fade-in" style="animation-delay: 0.25s">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-gray-400 text-xs font-bold uppercase tracking-wider">Histórico de Peso</h3>
+                <button onclick="toggleWeightInput()" class="text-prot-orange text-xs font-bold hover:underline">+ Novo Registro</button>
+            </div>
             
-            <!-- SVG Graph Container -->
-            <div class="w-full h-40 bg-black/20 rounded border border-prot-gray mb-4 relative overflow-hidden" id="weight-chart-container">
-                <!-- SVG gerado dinamicamente -->
-            </div>
-
-            <form onsubmit="addWeight(event)" class="flex gap-2">
-                <div class="relative flex-1">
-                    <input id="weight-input" type="number" step="0.1" placeholder="Novo peso (kg)" class="w-full pl-3 pr-3 py-3 bg-prot-gray text-white border border-transparent focus:border-prot-orange rounded-lg">
-                </div>
-                <button type="submit" class="bg-prot-orange hover:bg-prot-orange-dark text-white font-bold px-5 rounded-lg">
-                    Salvar
-                </button>
+            <form id="weight-form" onsubmit="addWeight(event)" class="hidden mb-4 flex gap-2 animate-fade-in">
+                <input id="weight-input" type="number" step="0.1" placeholder="Kg" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 text-white focus:border-prot-orange">
+                <button class="bg-prot-orange text-white px-4 py-2 rounded-lg font-bold">OK</button>
             </form>
+
+            <div id="chart-container" class="w-full h-32 bg-black/20 rounded-lg border border-gray-800 relative">
+                <!-- SVG Chart -->
+            </div>
         </section>
 
-        <!-- RESET MANUAL -->
-        <div class="text-center pt-6">
-            <button onclick="forceReset()" class="text-[10px] text-gray-600 hover:text-prot-red flex items-center justify-center gap-1 mx-auto">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                RESETAR DIA (DEBUG)
+        <!-- FOOTER RESET -->
+        <div class="text-center pt-8 pb-4">
+            <button onclick="forceReset()" class="text-[10px] text-gray-700 hover:text-prot-red transition-colors font-mono">
+                [ DEBUG: FORCE DAILY RESET ]
             </button>
         </div>
 
     </main>
 
     <script>
-        // --- CONSTANTS & CONFIG ---
-        const GOALS = {
-            WEIGHT: 90,
-            WATER: 4000, // ml
-            CALORIES: 1750, // kcal
-            START_WEIGHT: 106
+        // --- 1. CONFIG & DB ---
+        const CONFIG = {
+            calsGoal: 1750,
+            waterGoal: 4000, // ml
+            startWeight: 106,
+            goalWeight: 90
         };
 
-        const MEALS = [
-            { 
-                id: 'café', 
-                label: 'Café da Manhã', 
-                desc: '3 Ovos Mexidos + 1 fatia Pão Integral + Azeite', 
-                cals: 350,
-                alert: false 
-            },
-            { 
-                id: 'almoço', 
-                label: 'Almoço', 
-                desc: '200g Carne Magra + 80g Arroz + 100g Feijão', 
-                cals: 600,
-                alert: true // Fórmula 2
-            },
-            { 
-                id: 'lanche', 
-                label: 'Lanche Tarde', 
-                desc: '1 Dose Whey + 1 Fruta ou Iogurte', 
-                cals: 250,
-                alert: false 
-            },
-            { 
-                id: 'jantar', 
-                label: 'Jantar', 
-                desc: '200g Carne/Frango + 1 Batata Média (SEM FEIJÃO)', 
-                cals: 550,
-                alert: true // Fórmula 2
-            }
+        const FOOD_DB = [
+            { name: 'Arroz Branco (100g)', cals: 128 },
+            { name: 'Arroz Integral (100g)', cals: 110 },
+            { name: 'Feijão Carioca (1 Concha)', cals: 77 },
+            { name: 'Frango Grelhado (100g)', cals: 159 },
+            { name: 'Carne Moída Patinho (100g)', cals: 219 },
+            { name: 'Ovo Cozido/Mexido (Unid)', cals: 70 },
+            { name: 'Whey Protein (Dose 30g)', cals: 120 },
+            { name: 'Banana Prata (Méd)', cals: 90 },
+            { name: 'Maçã (Unid)', cals: 60 },
+            { name: 'Pão Integral (Fatia)', cals: 60 },
+            { name: 'Tapioca (100g)', cals: 130 },
+            { name: 'Azeite de Oliva (1 Colher Sopa)', cals: 108 },
+            { name: 'Café sem açúcar (Xícara)', cals: 2 },
+            { name: 'Batata Doce Cozida (100g)', cals: 86 },
+            { name: 'Iogurte Natural (Pote)', cals: 100 },
+            { name: 'Aveia em Flocos (30g)', cals: 104 }
         ];
 
         const MEDS_CONFIG = {
-            morning: { label: 'Manhã (Fórmula 1)', meds: ['Cafeína', 'Citrus', 'Ioimbina'] },
-            lunch: { label: 'Almoço/Jantar (Fórmula 2)', meds: ['Glucomannan', 'Psyllium'] },
-            night: { label: 'Noite (Fórmula 3)', meds: ['Morosil', 'Relora'] }
+            morning: { label: 'Manhã', items: ['Cafeína', 'Citrus', 'Ioimbina'] },
+            lunch: { label: 'Almoço', items: ['Glucomannan', 'Psyllium (Fibras)'] },
+            dinner: { label: 'Jantar', items: ['Glucomannan', 'Psyllium (Fibras)'] },
+            night: { label: 'Noite', items: ['Morosil', 'Relora'] }
         };
 
-        // --- STATE MANAGEMENT ---
+        // --- 2. STATE ---
         let state = {
             water: 0,
-            lastActiveDate: new Date().toDateString(),
-            medications: [], // Array of {id, name, group, taken}
-            weightHistory: [],
-            nutritionHistory: []
+            nutritionHistory: [], // {id, name, cals, date}
+            weightHistory: [], // {date, weight}
+            exerciseHistory: [], // {id, type, date}
+            medications: [], // {id, group, name, taken, date}
+            lastActiveDate: ''
         };
 
-        // --- INIT ---
+        // --- 3. INIT & PERSISTENCE ---
         function init() {
-            const saved = localStorage.getItem('proto90k_vanilla_v1');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    state = { ...state, ...parsed };
-                } catch(e) { console.error("Erro load", e); }
+            const saved = localStorage.getItem('proto90k_v3');
+            if(saved) {
+                state = JSON.parse(saved);
             } else {
-                // First run setup
+                // First boot
+                state.lastActiveDate = new Date().toDateString();
+                state.weightHistory.push({ date: new Date().toISOString(), weight: CONFIG.startWeight });
                 seedMeds();
-                state.weightHistory.push({ date: new Date().toISOString(), weight: GOALS.START_WEIGHT });
             }
 
             checkDailyReset();
@@ -283,332 +297,304 @@
         }
 
         function seedMeds() {
-            let meds = [];
+            // Re-generate med structure based on current date
+            const today = new Date().toDateString();
+            state.medications = [];
             Object.keys(MEDS_CONFIG).forEach(group => {
-                MEDS_CONFIG[group].meds.forEach((name, idx) => {
-                    meds.push({
-                        id: `${group}-${idx}`,
-                        name: name,
+                MEDS_CONFIG[group].items.forEach(item => {
+                    state.medications.push({
+                        id: group + '-' + item.replace(/\s/g, ''),
                         group: group,
-                        taken: false
+                        name: item,
+                        taken: false,
+                        date: today
                     });
                 });
             });
-            state.medications = meds;
         }
 
         function checkDailyReset() {
             const today = new Date().toDateString();
-            if (state.lastActiveDate !== today) {
-                // Reset daily counters
+            if(state.lastActiveDate !== today) {
                 state.water = 0;
-                state.medications.forEach(m => m.taken = false);
+                seedMeds(); // Reset meds for today
                 state.lastActiveDate = today;
                 save();
             }
         }
 
         function save() {
-            localStorage.setItem('proto90k_vanilla_v1', JSON.stringify(state));
+            localStorage.setItem('proto90k_v3', JSON.stringify(state));
             renderAll();
         }
 
-        function renderAll() {
-            renderNutrition();
-            renderWater();
-            renderMeds();
-            renderWeight();
-            renderHeader();
-        }
+        // --- 4. CORE ACTIONS ---
 
-        // --- RENDERERS ---
-
-        function renderHeader() {
-            const currentWeight = state.weightHistory.length > 0 ? state.weightHistory[state.weightHistory.length-1].weight : GOALS.START_WEIGHT;
-            const diff = currentWeight - GOALS.START_WEIGHT;
-            const weightEl = document.getElementById('header-weight');
-            
-            weightEl.innerText = `${currentWeight}kg`;
-            weightEl.className = `text-xl font-bold ${diff <= 0 ? 'text-prot-green' : 'text-prot-red'}`;
-        }
-
-        function renderNutrition() {
-            // Filter today
-            const todayStr = new Date().toDateString();
-            const todayLog = state.nutritionHistory.filter(n => new Date(n.date).toDateString() === todayStr);
-            const totalCals = todayLog.reduce((acc, curr) => acc + curr.cals, 0);
-
-            // Bar
-            const barEl = document.getElementById('nutri-bar');
-            const pct = Math.min((totalCals / GOALS.CALORIES) * 100, 100);
-            barEl.style.width = `${pct}%`;
-            
-            // Colors logic
-            const statusEl = document.getElementById('nutri-status');
-            const currentEl = document.getElementById('nutri-current');
-            
-            if (totalCals > GOALS.CALORIES) {
-                barEl.className = 'h-full bg-prot-red transition-all duration-500 animate-pulse';
-                statusEl.innerHTML = '<span class="text-prot-red font-bold flex items-center gap-1">⚠️ LIMITE EXCEDIDO</span>';
-                currentEl.className = 'text-3xl font-bold text-prot-red';
-            } else {
-                barEl.className = pct > 85 ? 'h-full bg-prot-orange transition-all duration-500' : 'h-full bg-blue-500 transition-all duration-500';
-                statusEl.innerHTML = `Restam: <span class="text-white font-bold">${GOALS.CALORIES - totalCals}</span>`;
-                currentEl.className = 'text-3xl font-bold text-white';
-            }
-            
-            currentEl.innerText = totalCals;
-
-            // List Buttons
-            const listEl = document.getElementById('meal-list');
-            listEl.innerHTML = '';
-            
-            MEALS.forEach(meal => {
-                const count = todayLog.filter(l => l.mealId === meal.id).length;
-                const isDone = count > 0;
-                
-                const btn = document.createElement('button');
-                btn.className = `w-full flex items-start justify-between p-3 rounded-lg border text-left transition-all relative overflow-hidden group ${isDone ? 'bg-gray-800/50 border-gray-700' : 'bg-black/30 border-gray-800 hover:bg-gray-800'}`;
-                btn.onclick = () => addMeal(meal);
-
-                let alertHtml = '';
-                if(meal.alert) {
-                    alertHtml = `<span class="ml-2 text-[9px] bg-purple-900/50 text-purple-300 px-1.5 py-0.5 rounded border border-purple-800 flex items-center gap-1 inline-flex"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg> FÓRMULA 2</span>`;
-                }
-
-                btn.innerHTML = `
-                    ${isDone ? '<div class="absolute left-0 top-0 bottom-0 w-1 bg-prot-green"></div>' : ''}
-                    <div class="flex-1 pr-2 z-10">
-                        <div class="flex items-center flex-wrap">
-                            <span class="font-bold text-gray-200">${meal.label}</span>
-                            ${alertHtml}
-                        </div>
-                        <p class="text-xs text-gray-500 mt-1 leading-snug">${meal.desc}</p>
-                    </div>
-                    <div class="flex flex-col items-end z-10">
-                        <span class="text-prot-orange font-bold text-sm">${meal.cals}</span>
-                        <span class="text-[10px] text-gray-600">kcal</span>
-                        ${isDone ? `<span class="text-[10px] text-prot-green mt-1">✓ Feito (${count})</span>` : ''}
-                    </div>
-                `;
-                listEl.appendChild(btn);
-            });
-
-            // History List
-            const historyEl = document.getElementById('nutri-history');
-            if(todayLog.length > 0) {
-                historyEl.classList.remove('hidden');
-                let html = '<p class="text-[10px] text-gray-500 uppercase font-bold mb-2">Histórico Hoje</p>';
-                todayLog.forEach(item => {
-                    html += `
-                        <div class="flex justify-between items-center text-xs p-1 hover:bg-white/5 rounded group">
-                            <span class="text-gray-400 truncate w-2/3">${item.name}</span>
-                            <div class="flex items-center gap-2">
-                                <span class="text-gray-300">${item.cals}</span>
-                                <button onclick="removeNutrition('${item.id}')" class="text-gray-600 hover:text-prot-red"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>
-                            </div>
-                        </div>
-                    `;
-                });
-                historyEl.innerHTML = html;
-            } else {
-                historyEl.classList.add('hidden');
-            }
-            
-            // Header calc update
-            document.getElementById('header-cals').innerText = `${totalCals} kcal`;
-            document.getElementById('header-cals').className = `text-xs px-2 py-0.5 rounded font-mono ${totalCals > GOALS.CALORIES ? 'bg-red-900 text-red-200' : 'bg-gray-800 text-gray-400'}`;
-        }
-
-        function renderWater() {
-            const pct = Math.min((state.water / GOALS.WATER) * 100, 100);
-            document.getElementById('water-current').innerText = (state.water / 1000).toFixed(1) + 'L';
-            document.getElementById('water-pct').innerText = pct.toFixed(0) + '%';
-            document.getElementById('water-bar').style.width = `${pct}%`;
-        }
-
-        function renderMeds() {
-            const container = document.getElementById('med-list');
-            container.innerHTML = '';
-            
-            ['morning', 'lunch', 'night'].forEach(groupKey => {
-                const groupConfig = MEDS_CONFIG[groupKey];
-                const groupMeds = state.medications.filter(m => m.group === groupKey);
-                
-                const allTaken = groupMeds.every(m => m.taken);
-                
-                const wrapper = document.createElement('div');
-                wrapper.innerHTML = `
-                    <div class="flex items-center gap-2 mb-2">
-                        <h4 class="text-xs font-bold uppercase tracking-wider ${allTaken ? 'text-prot-green' : 'text-gray-500'}">
-                            ${groupConfig.label}
-                        </h4>
-                        ${allTaken ? '<svg class="w-4 h-4 text-prot-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>' : ''}
-                    </div>
-                    <div class="space-y-2">
-                        ${groupMeds.map(med => `
-                            <button onclick="toggleMed('${med.id}')" class="w-full flex items-center justify-between p-3 rounded-lg border transition-all duration-200 ${med.taken ? 'bg-green-900/20 border-green-900/50 text-green-100' : 'bg-prot-gray border-transparent hover:bg-gray-700 text-gray-300'}">
-                                <span class="font-medium text-sm">${med.name}</span>
-                                ${med.taken 
-                                    ? '<svg class="w-5 h-5 text-prot-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>'
-                                    : '<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>'
-                                }
-                            </button>
-                        `).join('')}
-                    </div>
-                `;
-                container.appendChild(wrapper);
-            });
-        }
-
-        function renderWeight() {
-            const container = document.getElementById('weight-chart-container');
-            const data = state.weightHistory;
-            
-            if (data.length < 2) {
-                container.innerHTML = '<div class="flex items-center justify-center h-full text-gray-500 text-xs">Adicione mais dados para ver o gráfico</div>';
-                return;
-            }
-
-            // Simple normalization for SVG
-            const weights = data.map(d => d.weight);
-            const minW = Math.min(...weights, GOALS.WEIGHT) - 1;
-            const maxW = Math.max(...weights) + 1;
-            const rangeW = maxW - minW;
-            
-            const width = container.clientWidth;
-            const height = container.clientHeight;
-            
-            // Generate points
-            const points = data.map((d, i) => {
-                const x = (i / (data.length - 1)) * width;
-                const y = height - ((d.weight - minW) / rangeW) * height;
-                return `${x},${y}`;
-            }).join(' ');
-
-            // Goal Line Y
-            const goalY = height - ((GOALS.WEIGHT - minW) / rangeW) * height;
-
-            // SVG Construction
-            const svg = `
-                <svg width="100%" height="100%" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
-                    <!-- Goal Line -->
-                    <line x1="0" y1="${goalY}" x2="${width}" y2="${goalY}" stroke="#10B981" stroke-width="1" stroke-dasharray="4" opacity="0.5" />
-                    <text x="${width - 5}" y="${goalY - 5}" fill="#10B981" font-size="10" text-anchor="end">Meta</text>
-                    
-                    <!-- Graph Line -->
-                    <polyline points="${points}" class="chart-line" />
-                    
-                    <!-- Dots -->
-                    ${data.map((d, i) => {
-                        const x = (i / (data.length - 1)) * width;
-                        const y = height - ((d.weight - minW) / rangeW) * height;
-                        return `<circle cx="${x}" cy="${y}" class="chart-dot" />`;
-                    }).join('')}
-                </svg>
-            `;
-            
-            container.innerHTML = svg;
-        }
-
-        // --- ACTIONS ---
-
-        function addWater(amount) {
-            const oldVal = state.water;
-            state.water += amount;
-            
-            // Gamification check
-            if (oldVal < GOALS.WATER && state.water >= GOALS.WATER) {
-                showToast();
-            }
-            save();
-        }
-
-        function addMeal(meal) {
+        // Nutrition
+        function addFood(name, cals) {
             state.nutritionHistory.push({
-                id: Date.now().toString(),
-                mealId: meal.id,
-                name: meal.label,
-                cals: meal.cals,
+                id: Date.now(),
+                name,
+                cals,
                 date: new Date().toISOString()
             });
             save();
+            showToast(`+${cals} kcal adicionado`);
+            document.getElementById('food-search').value = '';
+            document.getElementById('search-results').classList.add('hidden');
         }
 
-        function addExtra() {
-            const desc = document.getElementById('extra-desc').value;
-            const cals = parseInt(document.getElementById('extra-cals').value);
-            
-            if (desc && cals > 0) {
-                state.nutritionHistory.push({
-                    id: Date.now().toString(),
-                    mealId: 'extra',
-                    name: `Extra: ${desc}`,
-                    cals: cals,
-                    date: new Date().toISOString()
-                });
-                
-                // Clear inputs
-                document.getElementById('extra-desc').value = '';
-                document.getElementById('extra-cals').value = '';
-                save();
+        function removeFood(id) {
+            state.nutritionHistory = state.nutritionHistory.filter(i => i.id !== id);
+            save();
+        }
+
+        // Water
+        function addWater(ml) {
+            state.water += ml;
+            save();
+            if(state.water >= CONFIG.waterGoal && (state.water - ml) < CONFIG.waterGoal) {
+                showToast("🏆 Meta de Água Batida!");
             }
         }
 
-        function removeNutrition(id) {
-            if(confirm('Remover este item?')) {
-                state.nutritionHistory = state.nutritionHistory.filter(i => i.id !== id);
-                save();
-            }
+        // Exercise
+        function addExercise(type) {
+            state.exerciseHistory.push({
+                id: Date.now(),
+                type: type,
+                date: new Date().toISOString()
+            });
+            save();
+            showToast("Atividade Registrada!");
         }
 
+        // Meds
         function toggleMed(id) {
             const med = state.medications.find(m => m.id === id);
-            if (med) {
+            if(med) {
                 med.taken = !med.taken;
                 save();
             }
         }
 
+        // Weight
         function addWeight(e) {
             e.preventDefault();
-            const val = parseFloat(document.getElementById('weight-input').value);
-            if (val > 0) {
-                state.weightHistory.push({
-                    date: new Date().toISOString(),
-                    weight: val
-                });
-                document.getElementById('weight-input').value = '';
+            const input = document.getElementById('weight-input');
+            const val = parseFloat(input.value);
+            if(val) {
+                state.weightHistory.push({ date: new Date().toISOString(), weight: val });
+                input.value = '';
+                document.getElementById('weight-form').classList.add('hidden');
                 save();
+                showToast("Peso Atualizado");
             }
+        }
+
+        function toggleWeightInput() {
+            document.getElementById('weight-form').classList.toggle('hidden');
+        }
+
+        // --- 5. RENDER LOGIC ---
+
+        function renderAll() {
+            renderHeader();
+            renderNutrition();
+            renderWater();
+            renderMeds();
+            renderFitness();
+            renderWeightGraph();
+        }
+
+        function renderHeader() {
+            const lastWeight = state.weightHistory[state.weightHistory.length-1].weight;
+            document.getElementById('header-weight').innerText = lastWeight;
+        }
+
+        function renderNutrition() {
+            const today = new Date().toDateString();
+            const todayLogs = state.nutritionHistory.filter(n => new Date(n.date).toDateString() === today);
+            const total = todayLogs.reduce((acc, cur) => acc + cur.cals, 0);
+
+            // Update Counter & Bar
+            document.getElementById('nutri-val').innerText = total;
+            document.getElementById('nutri-val').className = total > CONFIG.calsGoal ? 'text-2xl font-bold text-prot-red' : 'text-2xl font-bold text-white';
+            
+            const pct = Math.min((total / CONFIG.calsGoal) * 100, 100);
+            const bar = document.getElementById('nutri-bar');
+            bar.style.width = pct + '%';
+            bar.className = total > CONFIG.calsGoal 
+                ? 'h-full bg-prot-red shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all' 
+                : 'h-full bg-prot-orange shadow-[0_0_10px_rgba(249,115,22,0.5)] transition-all';
+
+            // List
+            const container = document.getElementById('meal-history');
+            if(todayLogs.length === 0) {
+                container.innerHTML = '<div class="text-center text-xs text-gray-600 py-2 italic">Nenhum registro hoje.</div>';
+            } else {
+                container.innerHTML = todayLogs.slice().reverse().map(item => `
+                    <div class="flex justify-between items-center text-xs bg-gray-800/30 p-2 rounded border border-gray-800">
+                        <span class="text-gray-300 font-medium">${item.name}</span>
+                        <div class="flex items-center gap-3">
+                            <span class="text-prot-orange font-bold">${item.cals} kcal</span>
+                            <button onclick="removeFood(${item.id})" class="text-gray-600 hover:text-red-500">✕</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function renderWater() {
+            const pct = Math.min((state.water / CONFIG.waterGoal) * 100, 100);
+            document.getElementById('water-bar').style.width = pct + '%';
+            document.getElementById('water-val').innerText = pct.toFixed(0) + '%';
+            if(pct >= 100) document.getElementById('water-val').classList.replace('text-blue-400', 'text-prot-green');
+        }
+
+        function renderFitness() {
+            const today = new Date().toDateString();
+            // Reset visuals
+            document.querySelectorAll('.exercise-check').forEach(el => {
+                el.innerHTML = '';
+                el.className = 'w-6 h-6 rounded-full border-2 border-gray-600 group-hover:border-prot-orange flex items-center justify-center exercise-check';
+                el.parentElement.classList.remove('border-prot-green/50', 'bg-green-900/20');
+            });
+
+            // Check done exercises today
+            const doneToday = state.exerciseHistory.filter(e => new Date(e.date).toDateString() === today);
+            
+            doneToday.forEach(ex => {
+                const checkEl = document.querySelector(`.exercise-check[data-type="${ex.type}"]`);
+                if(checkEl) {
+                    checkEl.innerHTML = '<svg class="w-4 h-4 text-prot-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>';
+                    checkEl.className = 'w-6 h-6 rounded-full border-2 border-prot-green flex items-center justify-center exercise-check';
+                    checkEl.parentElement.classList.add('border-prot-green/50', 'bg-green-900/10');
+                }
+            });
+        }
+
+        function renderMeds() {
+            const container = document.getElementById('meds-container');
+            container.innerHTML = '';
+            
+            ['morning', 'lunch', 'dinner', 'night'].forEach(group => {
+                const meds = state.medications.filter(m => m.group === group);
+                const isAllDone = meds.every(m => m.taken);
+                
+                const html = `
+                    <div class="border border-gray-800 rounded-xl overflow-hidden">
+                        <div class="bg-gray-800/50 px-4 py-2 flex justify-between items-center">
+                            <span class="text-xs font-bold uppercase text-gray-400">${MEDS_CONFIG[group].label}</span>
+                            ${isAllDone ? '<span class="text-xs text-prot-green font-bold">✓ FEITO</span>' : ''}
+                        </div>
+                        <div class="p-2 space-y-1">
+                            ${meds.map(med => `
+                                <button onclick="toggleMed('${med.id}')" class="w-full flex items-center justify-between p-2 rounded hover:bg-white/5 transition-colors ${med.taken ? 'opacity-50' : ''}">
+                                    <span class="text-sm text-gray-200 ${med.taken ? 'line-through' : ''}">${med.name}</span>
+                                    <div class="w-5 h-5 rounded border ${med.taken ? 'bg-prot-green border-prot-green' : 'border-gray-600'} flex items-center justify-center">
+                                        ${med.taken ? '<svg class="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' : ''}
+                                    </div>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function renderWeightGraph() {
+            const container = document.getElementById('chart-container');
+            const data = state.weightHistory;
+            if(data.length < 2) {
+                container.innerHTML = '<div class="h-full flex items-center justify-center text-xs text-gray-500">Registre mais pesos para ver o gráfico</div>';
+                return;
+            }
+
+            // Normalization
+            const weights = data.map(d => d.weight);
+            const max = Math.max(...weights) + 1;
+            const min = Math.min(...weights, CONFIG.goalWeight) - 1;
+            const range = max - min;
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+
+            // Points
+            const points = data.map((d, i) => {
+                const x = (i / (data.length - 1)) * w;
+                const y = h - ((d.weight - min) / range) * h;
+                return `${x},${y}`;
+            }).join(' ');
+
+            const goalY = h - ((CONFIG.goalWeight - min) / range) * h;
+
+            container.innerHTML = `
+                <svg width="100%" height="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+                    <line x1="0" y1="${goalY}" x2="${w}" y2="${goalY}" stroke="#22c55e" stroke-width="1" stroke-dasharray="5,5" opacity="0.5" />
+                    <text x="${w-5}" y="${goalY-5}" fill="#22c55e" font-size="10" text-anchor="end">Meta 90kg</text>
+                    <polyline points="${points}" class="chart-line" />
+                    ${data.map((d, i) => {
+                         const x = (i / (data.length - 1)) * w;
+                         const y = h - ((d.weight - min) / range) * h;
+                         return `<circle cx="${x}" cy="${y}" class="chart-dot" />`;
+                    }).join('')}
+                </svg>
+            `;
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            t.classList.remove('translate-y-[-150%]');
+            setTimeout(() => {
+                t.classList.add('translate-y-[-150%]');
+            }, 2500);
         }
 
         function forceReset() {
-            if(confirm('Isso vai zerar água e remédios de HOJE. Confirma?')) {
-                state.water = 0;
-                state.medications.forEach(m => m.taken = false);
-                save();
+            if(confirm('Isso vai zerar o progresso do dia. Confirma?')) {
+                state.lastActiveDate = ''; // Will trigger reset on reload logic
+                init();
             }
         }
 
-        function showToast() {
-            const toast = document.getElementById('toast');
-            toast.classList.remove('hidden');
-            setTimeout(() => {
-                toast.classList.add('opacity-100');
-                toast.classList.remove('opacity-0');
-            }, 10);
+        // --- 6. SEARCH LOGIC ---
+        const searchInput = document.getElementById('food-search');
+        const resultsBox = document.getElementById('search-results');
 
-            setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0');
-                setTimeout(() => toast.classList.add('hidden'), 300);
-            }, 3000);
-        }
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            if(term.length < 2) {
+                resultsBox.classList.add('hidden');
+                return;
+            }
 
-        // Run
-        window.onload = init;
+            const matches = FOOD_DB.filter(f => f.name.toLowerCase().includes(term));
+            
+            if(matches.length > 0) {
+                resultsBox.innerHTML = matches.map(f => `
+                    <button onclick="addFood('${f.name}', ${f.cals})" class="w-full text-left px-4 py-3 hover:bg-gray-800 border-b border-gray-800 last:border-0 flex justify-between items-center group">
+                        <span class="text-gray-300 group-hover:text-white transition-colors">${f.name}</span>
+                        <span class="text-prot-orange font-bold text-xs">${f.cals} kcal</span>
+                    </button>
+                `).join('');
+                resultsBox.classList.remove('hidden');
+            } else {
+                resultsBox.innerHTML = '<div class="px-4 py-3 text-gray-500 text-xs italic">Nada encontrado. <br>Use "Arroz", "Frango", etc.</div>';
+                resultsBox.classList.remove('hidden');
+            }
+        });
 
+        // Close search on click outside
+        document.addEventListener('click', (e) => {
+            if(!e.target.closest('#food-search') && !e.target.closest('#search-results')) {
+                resultsBox.classList.add('hidden');
+            }
+        });
+
+        // START
+        init();
     </script>
 </body>
 </html>
